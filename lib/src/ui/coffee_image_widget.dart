@@ -91,33 +91,25 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                 SizedBox(
                   height: 250,
                   width: 350,
-                  child: GridView.count(
-                    primary: false,
-                    crossAxisCount: 2,
-                    children: <Widget>[
-                      Container(
+                  child: GridView.builder(
+                    itemCount:
+                        widget.coffeeAPI.listImagesInSavedDirectory().length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                    itemBuilder: (context, index) {
+                      return Container(
                         // padding: const EdgeInsets.all(8),
                         color: Colors.teal[100],
                         child: Image.file(
                           io.File(
-                            widget.coffeeAPI.listImagesInSavedDirectory().first,
+                            widget.coffeeAPI.listImagesInSavedDirectory()[index],
                           ),
                           height: 100,
                           width: 100,
                         ),
-                      ),
-                      Container(
-                        // padding: const EdgeInsets.all(8),
-                        color: Colors.teal[100],
-                        child: Image.file(
-                          io.File(
-                            widget.coffeeAPI.listImagesInSavedDirectory().last,
-                          ),
-                          height: 100,
-                          width: 100,
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 )
               ],
