@@ -155,8 +155,21 @@ class CoffeeAPI {
       directory.listSync().map((item) => p.basename(item.path)).toList();
 
   /// Lists the contents of the saved directory specifically.
-  List<String> listImagesInSavedDirectory() =>
-      _savedImagesDirectory!.listSync().map((item) => item.path).toList();
+  List<String> listImagesInSavedDirectory() {
+    final imagePathsWithDateTime = _savedImagesDirectory!
+        .listSync()
+        .map((e) => {
+              'changed': e.statSync().changed,
+              'path': e.path,
+            })
+        .toList();
+
+    // Sort the images so that the new images come first
+    imagePathsWithDateTime.sort((a, b) =>
+        (b['changed']! as DateTime).compareTo(a['changed']! as DateTime));
+
+    return imagePathsWithDateTime.map((e) => e['path']! as String).toList();
+  }
 
   /// Save an image that was selected from the [CoffeeImageWidget].
   void saveImage(
