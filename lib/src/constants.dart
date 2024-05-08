@@ -9,4 +9,4 @@ const kCachedImageCount = 3;
 const kCoffeeFetchURL = 'https://coffee.alexflipnote.dev/random.json';
 
 /// How many images to prepopulate the app with.
-const kPrepopulatedImageCount = 10;
+const kPrepopulatedImageCount = 2;

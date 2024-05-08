@@ -24,19 +24,18 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
       builder: (context, AsyncSnapshot<CoffeeImage> snapshot) {
         return Column(
           children: [
-            const SizedBox(
-              height: 60,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData
-                    ? Image.memory(
-                        snapshot.data!.bodyBytes,
-                        height: 400,
-                        width: 400,
-                      )
+                    ? Expanded(
+                      child: Image.memory(
+                          fit: BoxFit.cover,
+                          snapshot.data!.bodyBytes,
+                          height: 450,
+                        ),
+                    )
                     : const SizedBox(
                         height: 400,
                         width: 400,
@@ -63,12 +62,12 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                   },
                   child: const Text('Save image'),
                 ),
-                TextButton(
-                  onPressed: () {
-                    widget.coffeeAPI.clearCache();
-                  },
-                  child: const Text('Clear cache'),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     widget.coffeeAPI.clearCache();
+                //   },
+                //   child: const Text('Clear cache'),
+                // ),
                 TextButton(
                   onPressed: () {
                     widget.coffeeAPI.clearSaved();
