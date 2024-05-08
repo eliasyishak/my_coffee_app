@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../data/coffee_api.dart';
 
@@ -33,12 +34,12 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                         snapshot.hasData
                     ? Image.memory(
                         snapshot.data!.bodyBytes,
-                        height: 300,
-                        width: 300,
+                        height: 400,
+                        width: 400,
                       )
                     : const SizedBox(
-                        height: 300,
-                        width: 300,
+                        height: 400,
+                        width: 400,
                         child: Padding(
                           padding: EdgeInsets.all(25),
                           child: CircularProgressIndicator(),
@@ -47,7 +48,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
                   onPressed: () {
@@ -77,42 +78,42 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                 )
               ],
             ),
-            Row(
-              children: [
-                Text(widget.coffeeAPI
-                    .listImagesInSavedDirectory()
-                    .length
-                    .toString())
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 250,
-                  width: 350,
-                  child: GridView.builder(
-                    itemCount:
-                        widget.coffeeAPI.listImagesInSavedDirectory().length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        // padding: const EdgeInsets.all(8),
-                        color: Colors.teal[100],
-                        child: Image.file(
-                          io.File(
-                            widget.coffeeAPI.listImagesInSavedDirectory()[index],
-                          ),
-                          height: 100,
-                          width: 100,
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/coffee-bean-pattern.png'),
+                          fit: BoxFit.cover,
                         ),
-                      );
-                    },
-                  ),
-                )
-              ],
+                      ),
+                      child: GridView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: widget.coffeeAPI
+                            .listImagesInSavedDirectory()
+                            .length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) {
+                          return Image.file(
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                            io.File(
+                              widget.coffeeAPI
+                                  .listImagesInSavedDirectory()[index],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         );

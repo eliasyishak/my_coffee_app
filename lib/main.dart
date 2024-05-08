@@ -56,13 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          CoffeeImageWidget(
-            coffeeAPI: widget.coffeeAPI,
-          ),
-        ],
+      body: CoffeeImageWidget(
+        coffeeAPI: widget.coffeeAPI,
       ),
     );
   }

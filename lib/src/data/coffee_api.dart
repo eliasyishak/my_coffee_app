@@ -120,6 +120,31 @@ class CoffeeAPI {
         io.Directory(p.join(documentsDirectory.path, 'cached'));
     _cachedImagesDirectory!.createSync();
 
+    final firstRunFile = io.File(p.join(documentsDirectory.path, 'FIRST_RUN'));
+    if (!firstRunFile.existsSync()) {
+      // If it is the first time we are running the app, prepopulate
+      // 10 images for the user
+      for (var i = 0; i < kPrepopulatedImageCount; i++) {
+        String remotePath;
+        while (true) {
+          final response = await http.get(Uri.parse(kCoffeeFetchURL));
+          remotePath = jsonDecode(response.body)['file'];
+
+          if (imageIsUnique(remotePath)) break;
+        }
+
+        final coffeeImage = CoffeeImage(
+          basename: p.basename(remotePath),
+          bodyBytes: (await http.get(Uri.parse(remotePath))).bodyBytes,
+        );
+
+        saveImage(coffeeImage, directory: _savedImagesDirectory!);
+      }
+
+      // Create the file so that we don't fetch more images on the next
+      // start up of the application
+      firstRunFile.createSync();
+    }
     await cacheImages();
 
     _initialized = true;
