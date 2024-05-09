@@ -30,14 +30,14 @@ class CoffeeAPI {
   }) : _documentsDirectory = documentsDirectory;
 
   /// This will enusre that there is [kCachedImageCount] items in the cache.
-  Future<void> cacheImages() async {
+  Future<void> cacheImages([int imagesToCache = kCachedImageCount]) async {
     if (_caching) return;
     _caching = true;
 
     final initalCacheCount = listImagesIn(_cachedImagesDirectory!).length;
     print('BEFORE: cached image count = $initalCacheCount...');
 
-    while (listImagesIn(_cachedImagesDirectory!).length != kCachedImageCount) {
+    while (listImagesIn(_cachedImagesDirectory!).length != imagesToCache) {
       String remotePath;
       while (true) {
         final response = await http.get(Uri.parse(kCoffeeFetchURL));
@@ -147,7 +147,11 @@ class CoffeeAPI {
       // start up of the application
       firstRunFile.createSync();
     }
-    await cacheImages();
+
+    // We have to await the first call so that there is an image
+    // to pull in while the other call downloads them in the background
+    await cacheImages(1);
+    cacheImages();
 
     _initialized = true;
   }
@@ -179,7 +183,7 @@ class CoffeeAPI {
     io.Directory? directory,
   }) {
     final saveDirectory = directory ?? _savedImagesDirectory!;
-    print('Saving image ${coffeeImage.basename} to $saveDirectory...');
+    print('Saving image ${coffeeImage.basename} to ${p.basename(saveDirectory.path)}...');
 
     io.File(p.join(saveDirectory.path, coffeeImage.basename))
         .writeAsBytesSync(coffeeImage.bodyBytes);
