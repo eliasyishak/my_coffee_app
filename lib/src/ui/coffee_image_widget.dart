@@ -36,18 +36,24 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
             ),
           ],
         ),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            TextButton(
+            const SizedBox(height: 10),
+            ElevatedButton(
               onPressed: () {
+                widget.coffeeAPI.deleteImage(coffeeImageToDisplay);
                 setState(() {});
               },
               child: const Text('New image'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
-                widget.coffeeAPI.saveImage(coffeeImageToDisplay);
+                widget.coffeeAPI.saveImage(
+                  coffeeImageToDisplay,
+                  userInitiated: true,
+                );
                 setState(() {});
               },
               child: const Text('Save image'),
@@ -58,15 +64,17 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
             //   },
             //   child: const Text('Clear cache'),
             // ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 widget.coffeeAPI.clearSaved();
                 setState(() {});
               },
               child: const Text('Clear saved'),
-            )
+            ),
+            const SizedBox(height: 10),
           ],
         ),
+        const SizedBox(height: 10),
         Expanded(
           child: Row(
             children: [

@@ -106,9 +106,6 @@ class CoffeeAPI {
           .readAsBytesSync(),
     );
 
-    // Remove the image from the cache after displaying it
-    deleteImage(coffeeImage, directory: _cachedImagesDirectory!);
-
     cacheImages();
 
     return coffeeImage;
@@ -191,6 +188,7 @@ class CoffeeAPI {
   void saveImage(
     CoffeeImage coffeeImage, {
     io.Directory? directory,
+    bool userInitiated = false,
   }) {
     final saveDirectory = directory ?? _savedImagesDirectory!;
     print(
@@ -198,6 +196,11 @@ class CoffeeAPI {
 
     io.File(p.join(saveDirectory.path, coffeeImage.basename))
         .writeAsBytesSync(coffeeImage.bodyBytes);
+
+    // Remove the image from the cache after saving it
+    if (userInitiated) {
+      deleteImage(coffeeImage, directory: _cachedImagesDirectory!);
+    }
   }
 }
 
