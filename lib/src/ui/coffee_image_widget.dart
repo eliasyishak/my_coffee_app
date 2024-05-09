@@ -46,7 +46,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                 widget.coffeeAPI.deleteImage(coffeeImageToDisplay);
                 setState(() {});
               },
-              child: const Text('New image'),
+              child: const Text('New Image'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -56,7 +56,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                 );
                 setState(() {});
               },
-              child: const Text('Save image'),
+              child: const Text('Save Image'),
             ),
             // TextButton(
             //   onPressed: () {
@@ -66,10 +66,41 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
             // ),
             ElevatedButton(
               onPressed: () {
-                widget.coffeeAPI.clearSaved();
-                setState(() {});
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => Dialog(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const SizedBox(height: 25),
+                        const Text('Clear All Saved Images?'),
+                        const SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                widget.coffeeAPI.clearSaved();
+                                Navigator.pop(context);
+                                setState(() {});
+                              },
+                              child: const Text('Yes'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('No'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
-              child: const Text('Clear saved'),
+              child: const Text('Clear Saved'),
             ),
             const SizedBox(height: 10),
           ],
@@ -97,7 +128,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onLongPress: () {
-                          showDialog<String>(
+                          showDialog(
                             context: context,
                             builder: (BuildContext context) => Dialog(
                               child: Column(
@@ -105,7 +136,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   const SizedBox(height: 25),
-                                  const Text('Delete this Image?'),
+                                  const Text('Delete This Image?'),
                                   const SizedBox(height: 15),
                                   Row(
                                     mainAxisAlignment:
