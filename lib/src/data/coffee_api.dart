@@ -80,8 +80,8 @@ class CoffeeAPI {
   }
 
   /// Fetch one image from the remote resource at [kCoffeeFetchURL].
-  Future<CoffeeImage> fetchNewImage() async {
-    if (!_initialized) await init();
+  CoffeeImage fetchNewImage() {
+    if (!_initialized) init();
     print('Attemping to fetch new image from cache...');
 
     var cachedImagesList = listImagesIn(_cachedImagesDirectory!);
