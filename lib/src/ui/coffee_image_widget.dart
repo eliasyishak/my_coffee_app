@@ -20,7 +20,7 @@ class CoffeeImageWidget extends StatefulWidget {
 class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
   @override
   Widget build(BuildContext context) {
-    final coffeeImage = widget.coffeeAPI.fetchNewImage();
+    final coffeeImageToDisplay = widget.coffeeAPI.fetchNewImage();
 
     return Column(
       children: [
@@ -29,7 +29,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
           children: [
             Expanded(
               child: Image.memory(
-                coffeeImage.bodyBytes,
+                coffeeImageToDisplay.bodyBytes,
                 fit: BoxFit.cover,
                 height: 450,
               ),
@@ -47,7 +47,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
             ),
             TextButton(
               onPressed: () {
-                widget.coffeeAPI.saveImage(coffeeImage);
+                widget.coffeeAPI.saveImage(coffeeImageToDisplay);
                 setState(() {});
               },
               child: const Text('Save image'),
@@ -89,7 +89,43 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onLongPress: () {
-                          print('yello');
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => Dialog(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  const SizedBox(height: 25),
+                                  const Text('Delete this Image?'),
+                                  const SizedBox(height: 15),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          widget.coffeeAPI.deleteImageByPath(widget
+                                                  .coffeeAPI
+                                                  .listImagesInSavedDirectory()[
+                                              index]);
+                                          Navigator.pop(context);
+                                          setState(() {});
+                                        },
+                                        child: const Text('Yes'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('No'),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
                         onTap: () async {
                           await showDialog(

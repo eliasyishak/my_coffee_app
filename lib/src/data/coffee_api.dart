@@ -83,6 +83,12 @@ class CoffeeAPI {
     io.File(p.join(deleteDirectory.path, coffeeImage.basename)).deleteSync();
   }
 
+  /// Remove the image specified at the [path].
+  void deleteImageByPath(String path) {
+    print('Deleting image by path $path...');
+    io.File(path).deleteSync();
+  }
+
   /// Fetch one image from the remote resource at [kCoffeeFetchURL].
   CoffeeImage fetchNewImage() {
     if (!_initialized) init();
