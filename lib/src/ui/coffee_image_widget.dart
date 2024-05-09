@@ -1,16 +1,17 @@
 import 'dart:io' as io;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../data/coffee_api.dart';
+import 'image_dialogue.dart';
 
 class CoffeeImageWidget extends StatefulWidget {
+  final CoffeeAPI coffeeAPI;
+
   const CoffeeImageWidget({
     super.key,
     required this.coffeeAPI,
   });
-
-  final CoffeeAPI coffeeAPI;
 
   @override
   State<CoffeeImageWidget> createState() => _CoffeeImageWidgetState();
@@ -86,12 +87,27 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
                       crossAxisCount: 3,
                     ),
                     itemBuilder: (context, index) {
-                      return Image.file(
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                        io.File(
-                          widget.coffeeAPI.listImagesInSavedDirectory()[index],
+                      return GestureDetector(
+                        onLongPress: () {
+                          print('yello');
+                        },
+                        onTap: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (_) => ImageDialog(
+                              imagePath: widget.coffeeAPI
+                                  .listImagesInSavedDirectory()[index],
+                            ),
+                          );
+                        },
+                        child: Image.file(
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                          io.File(
+                            widget.coffeeAPI
+                                .listImagesInSavedDirectory()[index],
+                          ),
                         ),
                       );
                     },
