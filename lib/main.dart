@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'src/data/coffee_api.dart';
 import 'src/ui/coffee_image_widget.dart';
 
 void main() async {
-  final CoffeeAPI coffeeAPI = CoffeeAPI();
   WidgetsFlutterBinding.ensureInitialized();
+  final CoffeeAPI coffeeAPI = CoffeeAPI(
+    documentsDirectory: await getApplicationDocumentsDirectory(),
+  );
   await coffeeAPI.init();
 
   runApp(MyApp(
@@ -14,12 +17,12 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final CoffeeAPI coffeeAPI;
+
   const MyApp({
     super.key,
     required this.coffeeAPI,
   });
-
-  final CoffeeAPI coffeeAPI;
 
   // This widget is the root of your application.
   @override
@@ -56,7 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Coffee by Elias'),),
+      appBar: AppBar(
+        title: const Text('Coffee by Elias'),
+      ),
       body: CoffeeImageWidget(
         coffeeAPI: widget.coffeeAPI,
       ),

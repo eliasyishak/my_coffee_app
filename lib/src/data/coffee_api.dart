@@ -10,6 +10,9 @@ import '../constants.dart';
 import '../ui/coffee_image_widget.dart';
 
 class CoffeeAPI {
+  /// The root directory for the device storage.
+  final io.Directory _documentsDirectory;
+
   /// The directory that will contain the saved image files.
   io.Directory? _savedImagesDirectory;
 
@@ -22,7 +25,9 @@ class CoffeeAPI {
   /// Indicates if we are actively caching so we don't duplicate work.
   bool _caching = false;
 
-  CoffeeAPI();
+  CoffeeAPI({
+    required io.Directory documentsDirectory,
+  }) : _documentsDirectory = documentsDirectory;
 
   /// This will enusre that there is [kCachedImageCount] items in the cache.
   Future<void> cacheImages() async {
@@ -111,16 +116,15 @@ class CoffeeAPI {
   /// Ensure that the directories are found for the cached and saved images.
   Future<void> init() async {
     print('Initializing...');
-    final documentsDirectory = await getApplicationDocumentsDirectory();
     _savedImagesDirectory ??=
-        io.Directory(p.join(documentsDirectory.path, 'saved'));
+        io.Directory(p.join(_documentsDirectory.path, 'saved'));
     _savedImagesDirectory!.createSync();
 
     _cachedImagesDirectory ??=
-        io.Directory(p.join(documentsDirectory.path, 'cached'));
+        io.Directory(p.join(_documentsDirectory.path, 'cached'));
     _cachedImagesDirectory!.createSync();
 
-    final firstRunFile = io.File(p.join(documentsDirectory.path, 'FIRST_RUN'));
+    final firstRunFile = io.File(p.join(_documentsDirectory.path, 'FIRST_RUN'));
     if (!firstRunFile.existsSync()) {
       // If it is the first time we are running the app, prepopulate
       // 10 images for the user
