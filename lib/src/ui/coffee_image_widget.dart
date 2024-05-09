@@ -35,7 +35,7 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
               child: Image.memory(
                 coffeeImageToDisplay.bodyBytes,
                 fit: BoxFit.cover,
-                height: 450,
+                height: 300,
               ),
             ),
           ],
