@@ -43,10 +43,15 @@ class CoffeeAPI {
     while (listImagesIn(_cachedImagesDirectory!).length < imagesToCache) {
       String remotePath;
       while (true) {
-        final response = await http.get(Uri.parse(kCoffeeFetchURL));
-        remotePath = jsonDecode(response.body)['file'];
+        try {
+          final response = await http.get(Uri.parse(kCoffeeFetchURL));
+          remotePath = jsonDecode(response.body)['file'];
 
-        if (imageIsUnique(remotePath)) break;
+          if (imageIsUnique(remotePath)) break;
+        } catch (e) {
+          _caching = false;
+          return;
+        }
       }
 
       final coffeeImage = CoffeeImage(
@@ -90,11 +95,15 @@ class CoffeeAPI {
   }
 
   /// Fetch one image from the remote resource at [kCoffeeFetchURL].
-  CoffeeImage fetchNewImage() {
+  CoffeeImage? fetchNewImage() {
     if (!_initialized) init();
     print('Attemping to fetch new image from cache...');
 
     var cachedImagesList = listImagesIn(_cachedImagesDirectory!);
+    if (cachedImagesList.isEmpty) {
+      cacheImages();
+      return null;
+    }
 
     // Return the first item from the list
     final cachedImagePath = cachedImagesList.first;

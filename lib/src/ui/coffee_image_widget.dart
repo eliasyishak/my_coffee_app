@@ -1,16 +1,19 @@
 import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
+import 'package:my_coffee_app/src/constants.dart';
 
 import '../data/coffee_api.dart';
 import 'image_dialogue.dart';
 
 class CoffeeImageWidget extends StatefulWidget {
   final CoffeeAPI coffeeAPI;
+  final CoffeeImage noInternetImage;
 
   const CoffeeImageWidget({
     super.key,
     required this.coffeeAPI,
+    required this.noInternetImage,
   });
 
   @override
@@ -20,7 +23,8 @@ class CoffeeImageWidget extends StatefulWidget {
 class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
   @override
   Widget build(BuildContext context) {
-    final coffeeImageToDisplay = widget.coffeeAPI.fetchNewImage();
+    final coffeeImageToDisplay =
+        widget.coffeeAPI.fetchNewImage() ?? widget.noInternetImage;
 
     return Column(
       children: [
@@ -43,7 +47,9 @@ class _CoffeeImageWidgetState extends State<CoffeeImageWidget> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                widget.coffeeAPI.deleteImage(coffeeImageToDisplay);
+                if (coffeeImageToDisplay.basename != kNoInternetFilename) {
+                  widget.coffeeAPI.deleteImage(coffeeImageToDisplay);
+                }
                 setState(() {});
               },
               child: const Text('New Image'),

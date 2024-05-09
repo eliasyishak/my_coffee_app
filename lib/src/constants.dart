@@ -8,5 +8,8 @@ const kCachedImageCount = 3;
 /// The URL to fetch the random coffee image.
 const kCoffeeFetchURL = 'https://coffee.alexflipnote.dev/random.json';
 
+/// The file name for the image to display when there is no internet
+const kNoInternetFilename = 'no-internet.png';
+
 /// How many images to prepopulate the app with.
 const kPrepopulatedImageCount = 2;

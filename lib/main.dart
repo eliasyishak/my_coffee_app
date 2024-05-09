@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'src/constants.dart';
 import 'src/data/coffee_api.dart';
 import 'src/ui/coffee_image_widget.dart';
 
@@ -11,17 +13,27 @@ void main() async {
   );
   await coffeeAPI.init();
 
+  // Retrieve the bytes for the no internet image
+  final asset = await rootBundle.load('assets/$kNoInternetFilename');
+  final noInternetImage = CoffeeImage(
+    basename: kNoInternetFilename,
+    bodyBytes: asset.buffer.asUint8List(),
+  );
+
   runApp(MyApp(
     coffeeAPI: coffeeAPI,
+    noInternetImage: noInternetImage,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final CoffeeAPI coffeeAPI;
+  final CoffeeImage noInternetImage;
 
   const MyApp({
     super.key,
     required this.coffeeAPI,
+    required this.noInternetImage,
   });
 
   // This widget is the root of your application.
@@ -36,6 +48,7 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(
         title: 'Flutter Demo Home Page',
         coffeeAPI: coffeeAPI,
+        noInternetImage: noInternetImage,
       ),
     );
   }
@@ -44,11 +57,13 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   final String title;
   final CoffeeAPI coffeeAPI;
+  final CoffeeImage noInternetImage;
 
   const MyHomePage({
     super.key,
     required this.title,
     required this.coffeeAPI,
+    required this.noInternetImage,
   });
 
   @override
@@ -64,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: CoffeeImageWidget(
         coffeeAPI: widget.coffeeAPI,
+        noInternetImage: widget.noInternetImage,
       ),
     );
   }
