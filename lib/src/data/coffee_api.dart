@@ -37,9 +37,7 @@ class CoffeeAPI {
     final initalCacheCount = listImagesIn(_cachedImagesDirectory!).length;
     print('BEFORE: cached image count = $initalCacheCount...');
 
-    final iterations = kCachedImageCount - initalCacheCount;
-
-    for (var i = 0; i < iterations; i++) {
+    while (listImagesIn(_cachedImagesDirectory!).length != kCachedImageCount) {
       String remotePath;
       while (true) {
         final response = await http.get(Uri.parse(kCoffeeFetchURL));
