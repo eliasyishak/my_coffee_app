@@ -4,6 +4,8 @@ Welcome fellow Coffee enthusiasts! I hope this app can give you some fun coffee
 images to view while waiting for a flight, your doctor's waiting room, and even
 while waiting for your coffee!
 
+![](assets/CoffeebyEliasDemo-ezgif.com-video-to-gif-converter.gif)
+
 # Usage Instructions
 
 ### Viewing Images
