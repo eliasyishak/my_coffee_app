@@ -28,13 +28,18 @@ class CoffeeAPI {
   /// Indicates if we are actively caching so we don't duplicate work.
   bool _caching = false;
 
+  /// The [http] client we will use to fetch the contents.
+  final http.Client _client;
+
   CoffeeAPI({
     required io.Directory documentsDirectory,
+    http.Client? client,
   })  : _documentsDirectory = documentsDirectory,
         _savedImagesDirectory =
             io.Directory(p.join(documentsDirectory.path, 'saved')),
         _cachedImagesDirectory =
-            io.Directory(p.join(documentsDirectory.path, 'cached'));
+            io.Directory(p.join(documentsDirectory.path, 'cached')),
+        _client = client ?? http.Client();
 
   /// This will enusre that there is [kCachedImageCount] items in the cache.
   Future<void> cacheImages([
@@ -51,7 +56,7 @@ class CoffeeAPI {
       String remotePath;
       while (true) {
         try {
-          final response = await http.get(Uri.parse(kCoffeeFetchURL));
+          final response = await _client.get(Uri.parse(kCoffeeFetchURL));
           remotePath = jsonDecode(response.body)['file'];
 
           if (imageIsUnique(remotePath)) break;
@@ -63,7 +68,7 @@ class CoffeeAPI {
 
       final coffeeImage = CoffeeImage(
         basename: p.basename(remotePath),
-        bodyBytes: (await http.get(Uri.parse(remotePath))).bodyBytes,
+        bodyBytes: (await _client.get(Uri.parse(remotePath))).bodyBytes,
       );
 
       saveImage(coffeeImage, directory: _cachedImagesDirectory);
@@ -147,7 +152,7 @@ class CoffeeAPI {
       for (var i = 0; i < kPrepopulatedImageCount; i++) {
         String remotePath;
         while (true) {
-          final response = await http.get(Uri.parse(kCoffeeFetchURL));
+          final response = await _client.get(Uri.parse(kCoffeeFetchURL));
           remotePath = jsonDecode(response.body)['file'];
 
           if (imageIsUnique(remotePath)) break;
@@ -155,7 +160,7 @@ class CoffeeAPI {
 
         final coffeeImage = CoffeeImage(
           basename: p.basename(remotePath),
-          bodyBytes: (await http.get(Uri.parse(remotePath))).bodyBytes,
+          bodyBytes: (await _client.get(Uri.parse(remotePath))).bodyBytes,
         );
 
         saveImage(coffeeImage, directory: _savedImagesDirectory);
