@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 import '../constants.dart';
 import '../ui/coffee_image_widget.dart';
@@ -86,6 +85,7 @@ class CoffeeAPI {
     _initialized = false;
   }
 
+  /// Removes all of the images saved in [_savedImagesDirectory].
   void clearSaved() {
     log.info('Clearing saved images...');
     _savedImagesDirectory.deleteSync(recursive: true);
@@ -140,7 +140,9 @@ class CoffeeAPI {
       !listImagesIn(_cachedImagesDirectory).contains(p.basename(remotePath));
 
   /// Ensure that the directories are found for the cached and saved images.
-  Future<void> init() async {
+  ///
+  /// [testing] being true indicates we should wait for all caching to be complete.
+  Future<void> init({bool testing = false}) async {
     log.info('Initializing...');
     _savedImagesDirectory.createSync();
     _cachedImagesDirectory.createSync();
@@ -173,8 +175,12 @@ class CoffeeAPI {
 
     // We have to await the first call so that there is an image
     // to pull in while the other call downloads them in the background
-    await cacheImages(1, true);
-    cacheImages();
+    if (testing) {
+      await cacheImages();
+    } else {
+      await cacheImages(1, true);
+      cacheImages();
+    }
 
     _initialized = true;
   }
@@ -228,4 +234,7 @@ class CoffeeImage {
     required this.basename,
     required this.bodyBytes,
   });
+
+  @override
+  String toString() => 'CoffeeImage Instance: $basename';
 }

@@ -8,17 +8,17 @@ import 'src/data/coffee_api.dart';
 import 'src/ui/coffee_image_widget.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final CoffeeAPI coffeeAPI = CoffeeAPI(
-    documentsDirectory: await getApplicationDocumentsDirectory(),
-  );
-  await coffeeAPI.init();
-
   // Configure the logger to print to the console
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) =>
       // ignore: avoid_print
       print('${record.level.name}: ${record.time} - ${record.message}'));
+
+  WidgetsFlutterBinding.ensureInitialized();
+  final CoffeeAPI coffeeAPI = CoffeeAPI(
+    documentsDirectory: await getApplicationDocumentsDirectory(),
+  );
+  await coffeeAPI.init();
 
   // Retrieve the bytes for the no internet image
   final asset = await rootBundle.load('assets/$kNoInternetFilename');
