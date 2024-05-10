@@ -3,11 +3,14 @@ import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../constants.dart';
 import '../ui/coffee_image_widget.dart';
+
+final log = Logger('CoffeeAPI');
 
 class CoffeeAPI {
   /// The root directory for the device storage.
@@ -42,7 +45,7 @@ class CoffeeAPI {
     _caching = true;
 
     final initalCacheCount = listImagesIn(_cachedImagesDirectory).length;
-    print('BEFORE: cached image count = $initalCacheCount...');
+    log.info('BEFORE: cached image count = $initalCacheCount...');
 
     while (listImagesIn(_cachedImagesDirectory).length < imagesToCache) {
       String remotePath;
@@ -66,27 +69,27 @@ class CoffeeAPI {
       saveImage(coffeeImage, directory: _cachedImagesDirectory);
       if (breakAfterOne) break;
     }
-    print('AFTER: cached image '
+    log.info('AFTER: cached image '
         'count = ${listImagesIn(_cachedImagesDirectory).length}...');
     _caching = false;
   }
 
   /// Clears the cache directory.
   void clearCache() {
-    print('Clearing cache...');
+    log.info('Clearing cache...');
     _cachedImagesDirectory.deleteSync(recursive: true);
     _initialized = false;
   }
 
   void clearSaved() {
-    print('Clearing saved images...');
+    log.info('Clearing saved images...');
     _savedImagesDirectory.deleteSync(recursive: true);
     _savedImagesDirectory.createSync();
   }
 
   /// Remove the image from the specified [directory].
   void deleteImage(CoffeeImage coffeeImage, {io.Directory? directory}) {
-    print('Deleting image ${coffeeImage.basename} from $directory...');
+    log.info('Deleting image ${coffeeImage.basename} from $directory...');
     final deleteDirectory = directory ?? _cachedImagesDirectory;
 
     io.File(p.join(deleteDirectory.path, coffeeImage.basename)).deleteSync();
@@ -94,14 +97,14 @@ class CoffeeAPI {
 
   /// Remove the image specified at the [path].
   void deleteImageByPath(String path) {
-    print('Deleting image by path $path...');
+    log.info('Deleting image by path $path...');
     io.File(path).deleteSync();
   }
 
   /// Fetch one image from the remote resource at [kCoffeeFetchURL].
   CoffeeImage? fetchNewImage() {
     if (!_initialized) init();
-    print('Attemping to fetch new image from cache...');
+    log.info('Attemping to fetch new image from cache...');
 
     var cachedImagesList = listImagesIn(_cachedImagesDirectory);
     if (cachedImagesList.isEmpty) {
@@ -133,7 +136,7 @@ class CoffeeAPI {
 
   /// Ensure that the directories are found for the cached and saved images.
   Future<void> init() async {
-    print('Initializing...');
+    log.info('Initializing...');
     _savedImagesDirectory.createSync();
     _cachedImagesDirectory.createSync();
 
@@ -199,7 +202,7 @@ class CoffeeAPI {
     bool userInitiated = false,
   }) {
     final saveDirectory = directory ?? _savedImagesDirectory;
-    print(
+    log.info(
         'Saving image ${coffeeImage.basename} to ${p.basename(saveDirectory.path)}...');
 
     io.File(p.join(saveDirectory.path, coffeeImage.basename))

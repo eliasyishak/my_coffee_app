@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'src/constants.dart';
@@ -12,6 +13,11 @@ void main() async {
     documentsDirectory: await getApplicationDocumentsDirectory(),
   );
   await coffeeAPI.init();
+
+  // Configure the logger to print to the console
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) =>
+      print('${record.level.name}: ${record.time} - ${record.message}'));
 
   // Retrieve the bytes for the no internet image
   final asset = await rootBundle.load('assets/$kNoInternetFilename');
