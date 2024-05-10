@@ -42,8 +42,8 @@ When the app starts up for the first time, the following happen:
 2. It will then create two directories at that location; `cached` and `saved`. The
 `cached` directory will contain images that the user will pull from and the `saved`
 directory will be where the user saved images will be saved.
-3. The app will then download [kCachedImageCount] images into the `cached` directory
-and then prepopulate [kPrepopulatedImageCount] images into the `saved` directory. The images that are saved will show up in the grid below the buttons in the app.
+3. The app will then download [kCachedImageCount](lib/src/constants.dart) images into the `cached` directory
+and then prepopulate [kPrepopulatedImageCount](lib/src/constants.dart) images into the `saved` directory. The images that are saved will show up in the grid below the buttons in the app.
 4. As the user interacts with the app, the app will continuously download new images
 into `cached` so that the user has access to them when they request a new one.
 
@@ -53,7 +53,7 @@ UX for the app user.
 ### No internet connection
 By default, the app will keep a few images in the cache so if the user has spotty internet
 service, they will be able to pull from the local cache. The number of images that can be
-stored in the cache is configurable and stored in the `lib/src/constants.dart` file. However,
+stored in the cache is configurable and stored in the [`lib/src/constants.dart`](lib/src/constants.dart) file. However,
 once the cache has been depleted and it can't refill it due to no internet, it will display
 an image indicating that the internet service is not connected. In this situation, the user
 is still able to view the previously saved images since those images are saved onto the device.
