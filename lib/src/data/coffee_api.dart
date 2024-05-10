@@ -14,10 +14,10 @@ class CoffeeAPI {
   final io.Directory _documentsDirectory;
 
   /// The directory that will contain the saved image files.
-  io.Directory? _savedImagesDirectory;
+  final io.Directory _savedImagesDirectory;
 
   /// The directory that will contain the cached image files.
-  io.Directory? _cachedImagesDirectory;
+  final io.Directory _cachedImagesDirectory;
 
   /// Indicates if we have successfully finished calling [init].
   bool _initialized = false;
@@ -27,7 +27,11 @@ class CoffeeAPI {
 
   CoffeeAPI({
     required io.Directory documentsDirectory,
-  }) : _documentsDirectory = documentsDirectory;
+  })  : _documentsDirectory = documentsDirectory,
+        _savedImagesDirectory =
+            io.Directory(p.join(documentsDirectory.path, 'saved')),
+        _cachedImagesDirectory =
+            io.Directory(p.join(documentsDirectory.path, 'cached'));
 
   /// This will enusre that there is [kCachedImageCount] items in the cache.
   Future<void> cacheImages([
@@ -37,10 +41,10 @@ class CoffeeAPI {
     if (_caching) return;
     _caching = true;
 
-    final initalCacheCount = listImagesIn(_cachedImagesDirectory!).length;
+    final initalCacheCount = listImagesIn(_cachedImagesDirectory).length;
     print('BEFORE: cached image count = $initalCacheCount...');
 
-    while (listImagesIn(_cachedImagesDirectory!).length < imagesToCache) {
+    while (listImagesIn(_cachedImagesDirectory).length < imagesToCache) {
       String remotePath;
       while (true) {
         try {
@@ -59,31 +63,31 @@ class CoffeeAPI {
         bodyBytes: (await http.get(Uri.parse(remotePath))).bodyBytes,
       );
 
-      saveImage(coffeeImage, directory: _cachedImagesDirectory!);
+      saveImage(coffeeImage, directory: _cachedImagesDirectory);
       if (breakAfterOne) break;
     }
     print('AFTER: cached image '
-        'count = ${listImagesIn(_cachedImagesDirectory!).length}...');
+        'count = ${listImagesIn(_cachedImagesDirectory).length}...');
     _caching = false;
   }
 
   /// Clears the cache directory.
   void clearCache() {
     print('Clearing cache...');
-    _cachedImagesDirectory!.deleteSync(recursive: true);
+    _cachedImagesDirectory.deleteSync(recursive: true);
     _initialized = false;
   }
 
   void clearSaved() {
     print('Clearing saved images...');
-    _savedImagesDirectory!.deleteSync(recursive: true);
-    _savedImagesDirectory!.createSync();
+    _savedImagesDirectory.deleteSync(recursive: true);
+    _savedImagesDirectory.createSync();
   }
 
   /// Remove the image from the specified [directory].
   void deleteImage(CoffeeImage coffeeImage, {io.Directory? directory}) {
     print('Deleting image ${coffeeImage.basename} from $directory...');
-    final deleteDirectory = directory ?? _cachedImagesDirectory!;
+    final deleteDirectory = directory ?? _cachedImagesDirectory;
 
     io.File(p.join(deleteDirectory.path, coffeeImage.basename)).deleteSync();
   }
@@ -99,7 +103,7 @@ class CoffeeAPI {
     if (!_initialized) init();
     print('Attemping to fetch new image from cache...');
 
-    var cachedImagesList = listImagesIn(_cachedImagesDirectory!);
+    var cachedImagesList = listImagesIn(_cachedImagesDirectory);
     if (cachedImagesList.isEmpty) {
       cacheImages();
       return null;
@@ -111,7 +115,7 @@ class CoffeeAPI {
     final coffeeImage = CoffeeImage(
       basename: p.basename(cachedImagePath),
       bodyBytes: io.File(
-              p.join(_cachedImagesDirectory!.path, p.basename(cachedImagePath)))
+              p.join(_cachedImagesDirectory.path, p.basename(cachedImagePath)))
           .readAsBytesSync(),
     );
 
@@ -124,19 +128,14 @@ class CoffeeAPI {
   /// unique by checking against the [_savedImagesDirectory] and
   /// [_cachedImagesDirectory].
   bool imageIsUnique(String remotePath) =>
-      !listImagesIn(_savedImagesDirectory!).contains(p.basename(remotePath)) &&
-      !listImagesIn(_cachedImagesDirectory!).contains(p.basename(remotePath));
+      !listImagesIn(_savedImagesDirectory).contains(p.basename(remotePath)) &&
+      !listImagesIn(_cachedImagesDirectory).contains(p.basename(remotePath));
 
   /// Ensure that the directories are found for the cached and saved images.
   Future<void> init() async {
     print('Initializing...');
-    _savedImagesDirectory ??=
-        io.Directory(p.join(_documentsDirectory.path, 'saved'));
-    _savedImagesDirectory!.createSync();
-
-    _cachedImagesDirectory ??=
-        io.Directory(p.join(_documentsDirectory.path, 'cached'));
-    _cachedImagesDirectory!.createSync();
+    _savedImagesDirectory.createSync();
+    _cachedImagesDirectory.createSync();
 
     final firstRunFile = io.File(p.join(_documentsDirectory.path, 'FIRST_RUN'));
     if (!firstRunFile.existsSync()) {
@@ -156,7 +155,7 @@ class CoffeeAPI {
           bodyBytes: (await http.get(Uri.parse(remotePath))).bodyBytes,
         );
 
-        saveImage(coffeeImage, directory: _savedImagesDirectory!);
+        saveImage(coffeeImage, directory: _savedImagesDirectory);
       }
 
       // Create the file so that we don't fetch more images on the next
@@ -178,7 +177,7 @@ class CoffeeAPI {
 
   /// Lists the contents of the saved directory specifically.
   List<String> listImagesInSavedDirectory() {
-    final imagePathsWithDateTime = _savedImagesDirectory!
+    final imagePathsWithDateTime = _savedImagesDirectory
         .listSync()
         .map((e) => {
               'changed': e.statSync().changed,
@@ -199,7 +198,7 @@ class CoffeeAPI {
     io.Directory? directory,
     bool userInitiated = false,
   }) {
-    final saveDirectory = directory ?? _savedImagesDirectory!;
+    final saveDirectory = directory ?? _savedImagesDirectory;
     print(
         'Saving image ${coffeeImage.basename} to ${p.basename(saveDirectory.path)}...');
 
@@ -208,7 +207,7 @@ class CoffeeAPI {
 
     // Remove the image from the cache after saving it
     if (userInitiated) {
-      deleteImage(coffeeImage, directory: _cachedImagesDirectory!);
+      deleteImage(coffeeImage, directory: _cachedImagesDirectory);
     }
   }
 }
