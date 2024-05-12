@@ -15,7 +15,7 @@ void main() async {
           '${record.level.name}: '
           '${record.time} - ${record.message}'));
 
-  late final CoffeeAPI coffeeAPI;
+  late CoffeeAPI coffeeAPI;
   final io.Directory documentsDirectory = io.Directory(p.join(
     io.Directory.systemTemp.path,
     'coffee_app_testing',

@@ -57,3 +57,25 @@ stored in the cache is configurable and stored in the [`lib/src/constants.dart`]
 once the cache has been depleted and it can't refill it due to no internet, it will display
 an image indicating that the internet service is not connected. In this situation, the user
 is still able to view the previously saved images since those images are saved onto the device.
+
+# Future Work
+### Reduce start up times
+Currently, there is a bit of a delay when the app starts for the first time on a device
+because it needs to prepopulate a few saved images as well as load the cache initially. Ideally
+this would all happen in the background so that the user has less start up time.
+
+### Increase test coverage to cover UI
+Currently, the tests only cover the `CoffeeAPI` class. This class is responsible for going
+to the remote endpoint and pulling the images and handling the cache. In the future, it would
+be great to make sure that the UI portion of this app is also tested.
+
+### Empty cache handling
+If the user depletes the cache and attempts to fetch a new image, they are shown a image that
+tells them to "try again" in a moment. Ideally, it would be nice if the app can go into a
+loading state and pulls in the next available image. If the internet connection is unavailable,
+it should also say that and not attempt to fetch a new image.
+
+### Save to photo library
+Currently, when a user wants to save an image, it will be saved into the app's local storage.
+It won't be available to the user in their photo library. There should be an additional button
+that allows the user to have the image they saved in the app appear in the photo library.
