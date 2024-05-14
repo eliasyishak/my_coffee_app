@@ -9,6 +9,16 @@ while waiting for your coffee!
 
 # Usage Instructions
 
+### Running Locally
+To run this app locally, ensure you have Flutter and Dart downloaded by first
+following the [Flutter setup directions](https://docs.flutter.dev/get-started/install).
+
+Once you have downloaded Flutter and confirm that everything is set, run `flutter doctor`
+in your terminal to ensure you have setup your workstation properly. Once that is
+complete, open a terminal in the root directory of this directory and run `flutter run`.
+Note, this has been tested to run on both iOS and Android only, desktop and web
+are not the intended targets for this app.
+
 ### Viewing Images
 To view your next image, you simply open the app and a new image will be shown
 to you on startup. If you are not a fan of this image, you can click the first
