@@ -4,7 +4,7 @@ Welcome fellow Coffee enthusiasts! I hope this app can give you some fun coffee
 images to view while waiting for a flight, your doctor's waiting room, and even
 while waiting for your coffee!
 
-[![Watch the video](public/Video%20screen.png)](public/Coffee%20by%20Elias%20Demo.mp4)
+[![Watch the video](public/Video%20screen.png)](https://github-production-user-asset-6210df.s3.amazonaws.com/42216813/329642228-40dd200c-43b9-4707-a7d2-f674109fe030.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240510%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240510T160305Z&X-Amz-Expires=300&X-Amz-Signature=5b96df807ebbfb79feed4f65283de07c30265f903009e36c31abec1f6abda8c4&X-Amz-SignedHeaders=host&actor_id=42216813&key_id=0&repo_id=797929422)
 
 
 # Usage Instructions
