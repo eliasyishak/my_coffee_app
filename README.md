@@ -24,8 +24,6 @@ To view your next image, you simply open the app and a new image will be shown
 to you on startup. If you are not a fan of this image, you can click the first
 button labeled `New Image` to cycle through a new image.
 
-[![Watch the video](public/Viewing%20screen.png)](https://github.com/eliasyishak/my_coffee_app/assets/42216813/1467e6df-770e-4cef-aca9-f2dd81d46851)
-
 ### Saving Images
 If you enjoy the current image being shown to you and you would like to save it,
 simply click the `Save Image` button and it will be saved in your local storage
@@ -36,6 +34,8 @@ If you would like to view a previously saved image in more detail, you can scrol
 in the window below the buttons to an image and tap on it. It will open the image
 in a popup window in more detail for your viewing pleasure. Once you are done viewing
 the image, you can tap anywhere on the screen and you will be back to the home page.
+
+[![Watch the video](public/Viewing%20screen.png)](https://github.com/eliasyishak/my_coffee_app/assets/42216813/1467e6df-770e-4cef-aca9-f2dd81d46851)
 
 ### Deleting Saved Images
 If for some reason, you no longer enjoy the coffee image you downloaded, you can delete
